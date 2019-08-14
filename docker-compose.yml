@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  chrome:
+    build: ./chrome/.
+    networks:
+      - internal
+    ports:
+      - 5900:5900
+    restart: unless-stopped
+    environment:
+      # 1080p
+      VNC_SCREEN_SIZE: '1920x1080'
+      # These options will make it a kiosk pointing to gitlab grafana dashboard
+      CHROME_OPTS_OVERRIDE: '--no-sandbox --window-position=0,0 --force-device-scale-factor=1 --start-fullscreen --kiosk --incognito --noerrdialogs --disable-translate --no-first-run --fast --fast-start --disable-infobars --disable-features=TranslateUI --disk-cache-dir=/dev/null --test-type https://dashboards.gitlab.com/d/RZmbBr7mk/gitlab-triage?orgId=1&refresh=30s&kiosk'
+
+  guacd:
+    image: linuxserver/guacd
+    networks:
+      - internal
+    ports:
+      - 4822:4822
+    restart: unless-stopped
+
+  # Frontend goes here!
+
+networks:
+  internal:
+    external: false
